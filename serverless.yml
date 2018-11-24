@@ -1,21 +1,5 @@
-# Welcome to Serverless!
-#
-# This file is the main config file for your service.
-# It's very minimal at this point and uses default values.
-# You can always add more config options for more control.
-# We've included some commented out config examples here.
-# Just uncomment any of them to get that config option.
-#
-# For full config options, check the docs:
-#    docs.serverless.com
-#
-# Happy Coding!
 
 service: junction18stara-aws-nodejs # NOTE: update this with your service name
-
-# You can pin your service to only deploy with a specific Serverless version
-# Check out our docs for more details
-# frameworkVersion: "=X.X.X"
 
 provider:
   name: aws
@@ -70,3 +54,28 @@ functions:
           path: getReview
           method: get
           cors: true
+  
+  getAverageQuestion1:
+    handler: handler.getAverageQuestion1
+    events:
+      - http:
+          path: getAverage1
+          method: get
+          cors: true
+  
+  getAverageQuestion2:
+    handler: handler.getAverageQuestion2
+    events:
+      - http:
+          path: getAverage2
+          method: get
+          cors: true        
+  
+  getAverageQuestion3:
+    handler: handler.getAverageQuestion3
+    events:
+      - http:
+          path: getAverage3
+          method: get
+          cors: true       
+         

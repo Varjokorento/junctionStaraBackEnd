@@ -124,5 +124,54 @@ module.exports.postNews = (event, context, callback) => {
   ));
 }
 
+module.exports.getAverageQuestion1 = (event, context, callback) => {
+  dbConnectAndExecute(mongoString, () => (
+    CustomerModel
+    .aggregate([
+      {$group:{_id: null, average: {$avg: '$question1'}}}
+    ])
+    .then(result => callback(null, {
+      headers: {
+        "Access-Control-Allow-Origin" : "*" // Required for CORS support to work
+      },
+       statusCode: 200, 
+       body: JSON.stringify(result) }))
+    .catch(err => callback(null, createErrorResponse(err.statusCode, err.message)))
+  ))
+}
+
+module.exports.getAverageQuestion2 = (event, context, callback) => {
+  dbConnectAndExecute(mongoString, () => (
+    CustomerModel
+    .aggregate([
+      {$group:{_id: null, average: {$avg: '$question2'}}}
+    ])
+    .then(result => callback(null, {
+      headers: {
+        "Access-Control-Allow-Origin" : "*" // Required for CORS support to work
+      },
+       statusCode: 200, 
+       body: JSON.stringify(result) }))
+    .catch(err => callback(null, createErrorResponse(err.statusCode, err.message)))
+  ))
+}
+
+module.exports.getAverageQuestion3 = (event, context, callback) => {
+  dbConnectAndExecute(mongoString, () => (
+    CustomerModel
+    .aggregate([
+      {$group:{_id: null, average: {$avg: '$question3'}}}
+    ])
+    .then(result => callback(null, {
+      headers: {
+        "Access-Control-Allow-Origin" : "*" // Required for CORS support to work
+      },
+       statusCode: 200, 
+       body: JSON.stringify(result) }))
+    .catch(err => callback(null, createErrorResponse(err.statusCode, err.message)))
+  ))
+}
+
+
 
 
