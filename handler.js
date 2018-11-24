@@ -2,9 +2,9 @@
 const mongoose = require('mongoose');
 const Promise = require('bluebird');
 const NewsModel = require('./model/News.js');
+const TrafficModel = require('./model/Traffic.js');
+const CustomerModel = require('./model/CustomerReview');
 const mongoString = require('./env/keys');
-//const mongoString = 
-//const mongoString = 'mongodb://kalle:kalle123@ds123372.mlab.com:23372/devconnectorvarjis'; 
 mongoose.Promise = Promise;
 
 
@@ -41,6 +41,70 @@ module.exports.getAllNews = (event, context, callback) => {
   ));
 }
 
+module.exports.getTraffic = (event, context, callback) => {
+  dbConnectAndExecute(mongoString, () => (
+    TrafficModel
+      .find()
+      .then(traffic => callback(null, {
+        headers: {
+          "Access-Control-Allow-Origin" : "*" // Required for CORS support to work
+        },
+         statusCode: 200, 
+         body: JSON.stringify(traffic)}))
+      .catch(err => callback(null, createErrorResponse(err.statusCode, err.message)))
+  ));
+}
+
+module.exports.postTraffic = (event, context, callback) => {
+  const data = JSON.parse(event.body);
+  const traffic = new TrafficModel({
+    congestion: data.congestion,
+    throughput: data.throughput
+  });
+
+  dbConnectAndExecute(mongoString, () => (
+    traffic.save()
+      .then((res) => callback(null, {
+        statusCode: 200,
+        body: JSON.stringify(res),
+      }))
+      .catch(err => callback(null, createErrorResponse(err.statusCode, err.message)))
+  ));
+}
+
+module.exports.postReview = (event, context, callback) => {
+  const data = JSON.parse(event.body);
+  const review = new CustomerModel({
+    question1: data.question1,
+    question2: data.question2,
+    question3: data.question3,
+    question4: data.question4
+  });
+
+  dbConnectAndExecute(mongoString, () => (
+    review.save()
+      .then((res) => callback(null, {
+        statusCode: 200,
+        body: JSON.stringify(res),
+      }))
+      .catch(err => callback(null, createErrorResponse(err.statusCode, err.message)))
+  ));
+}
+
+module.exports.getAllReviews = (event, context, callback) => {
+  dbConnectAndExecute(mongoString, () => (
+    CustomerModel
+      .find()
+      .then(reviews => callback(null, {
+        headers: {
+          "Access-Control-Allow-Origin" : "*" // Required for CORS support to work
+        },
+         statusCode: 200, 
+         body: JSON.stringify(reviews)}))
+      .catch(err => callback(null, createErrorResponse(err.statusCode, err.message)))
+  ));
+}
+
 
 module.exports.postNews = (event, context, callback) => {
   const data = JSON.parse(event.body);
@@ -60,16 +124,5 @@ module.exports.postNews = (event, context, callback) => {
   ));
 }
 
-
-
-module.exports.echo = (event, context, cb) => {
-  cb({
-      statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "*"
-      },
-      body: JSON.stringify({})
-    });
-};     
 
 
